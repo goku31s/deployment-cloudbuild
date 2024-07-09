@@ -1,0 +1,50 @@
+steps:
+# Build and push Apache image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:$TAG_NAME', './apache']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:$TAG_NAME']
+
+# Build and push Tomcat image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:$TAG_NAME', './tomcat']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:$TAG_NAME']
+
+# Create instance templates
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud compute instance-templates create-with-container apache-template-$TAG_NAME \
+      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:$TAG_NAME \
+      --tags=http-server \
+      --machine-type=e2-medium
+
+    gcloud compute instance-templates create-with-container tomcat-template-$TAG_NAME \
+      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:$TAG_NAME \
+      --tags=app-server \
+      --machine-type=e2-medium
+
+# Update Managed Instance Groups
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud compute instance-groups managed rolling-action start-update apache-mig \
+      --version template=apache-template-$TAG_NAME \
+      --max-surge=1 \
+      --max-unavailable=0 \
+      --zone=us-central1-a
+
+    gcloud compute instance-groups managed rolling-action start-update tomcat-mig \
+      --version template=tomcat-template-$TAG_NAME \
+      --max-surge=1 \
+      --max-unavailable=0 \
+      --zone=us-central1-a
+
+images:
+- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:$TAG_NAME'
+- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:$TAG_NAME'
