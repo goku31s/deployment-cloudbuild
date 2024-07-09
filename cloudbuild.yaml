@@ -5,7 +5,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1', './apache']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2']
+  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1']
 
 # Build and push Tomcat image
 - name: 'gcr.io/cloud-builders/docker'
