@@ -3,15 +3,15 @@ logsBucket: 'gs://bucket67ut'
 steps:
 # Build and push Apache image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1', './apache']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2', './apache']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1']
+  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2']
 
 # Build and push Tomcat image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v1', './tomcat']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2', './tomcat']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v1']
+  args: ['push', 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2']
 
 # Create instance templates
 - name: 'gcr.io/cloud-builders/docker'
@@ -19,13 +19,13 @@ steps:
   args:
   - '-c'
   - |
-    gcloud compute instance-templates create-with-container apache-template-v1 \
-      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1 \
+    gcloud compute instance-templates create-with-container apache-template-v2 \
+      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2 \
       --tags=http-server \
       --machine-type=e2-medium
 
-    gcloud compute instance-templates create-with-container tomcat-template-v1 \
-      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v1 \
+    gcloud compute instance-templates create-with-container tomcat-template-v2 \
+      --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2 \
       --tags=app-server \
       --machine-type=e2-medium
 
@@ -48,5 +48,5 @@ steps:
       --zone=us-central1-a
 
 images:
-- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v1'
-- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v1'
+- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2'
+- 'us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2'
