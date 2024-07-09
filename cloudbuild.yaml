@@ -22,13 +22,15 @@ steps:
     gcloud compute instance-templates create-with-container apache-template-v2 \
       --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2 \
       --tags=http-server \
-      --machine-type=e2-medium
+      --machine-type=e2-medium \
+      --network=my-app-network
      
 
     gcloud compute instance-templates create-with-container tomcat-template-v2 \
       --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2 \
       --tags=app-server \
-      --machine-type=e2-medium
+      --machine-type=e2-medium \
+      --network=my-app-network
   
 
 # Update Managed Instance Groups
