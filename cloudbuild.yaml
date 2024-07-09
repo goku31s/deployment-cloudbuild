@@ -23,11 +23,13 @@ steps:
       --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/apache:v2 \
       --tags=http-server \
       --machine-type=e2-medium
+      --network=my-app-network
 
     gcloud compute instance-templates create-with-container tomcat-template-v2 \
       --container-image us-central1-docker.pkg.dev/sukrit-singh-426716/my-repo/tomcat:v2 \
       --tags=app-server \
       --machine-type=e2-medium
+      --network=my-app-network
 
 # Update Managed Instance Groups
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -38,13 +40,13 @@ steps:
     gcloud compute instance-groups managed rolling-action start-update apache-mig \
       --version template=apache-template-v2 \
       --max-surge=1 \
-      --max-unavailable=0 \
+      --max-unavailable=1 \
       --zone=us-central1-a
 
     gcloud compute instance-groups managed rolling-action start-update tomcat-mig \
       --version template=tomcat-template-v2 \
       --max-surge=1 \
-      --max-unavailable=0 \
+      --max-unavailable=1 \
       --zone=us-central1-a
 
 images:
