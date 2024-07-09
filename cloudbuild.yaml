@@ -1,3 +1,5 @@
+logsBucket: 'gs://bucket67ut'
+
 steps:
 # Build and push Apache image
 - name: 'gcr.io/cloud-builders/docker'
